@@ -57,7 +57,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <p class="pt-4 text-center text-xs md:text-sm pb-5">
+      <p className="pt-4 text-center text-xs md:text-sm pb-5">
         Copyright 2024 © QuickAI. All
         Right Reserved.
       </p>

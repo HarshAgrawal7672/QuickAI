@@ -1,19 +1,60 @@
-import { Image, Sparkles } from 'lucide-react';
-import React, { useState } from 'react'
+import { useAuth } from "@clerk/clerk-react";
+import { Image, Sparkles } from "lucide-react";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import Markdown from "react-markdown";
+import axios from "axios";
+
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 const GenerateImages = () => {
-  const ImageStyle = [ "Realistic", "Cartoon style", "Anime style", "Ghibli style", "Fantasy style", "Portrait style", "Abstract style", "3D style",  
-     
-    ];
-    const [selectedStyle, setSelectedStyle] = useState(ImageStyle[0]);
-    const [input, setInput] = useState("");
+  const ImageStyle = [
+    "Realistic",
+    "Cartoon style",
+    "Anime style",
+    "Ghibli style",
+    "Fantasy style",
+    "Portrait style",
+    "Abstract style",
+    "3D style",
+  ];
+  const [selectedStyle, setSelectedStyle] = useState(ImageStyle[0]);
+  const [input, setInput] = useState("");
 
-    const [publish, setPublish] = useState(false);
-    const onSubmitHandler = async (event) => {
-      event.preventDefault();
-    };
+  const [publish, setPublish] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [content, setContent] = useState("");
+
+  const { getToken } = useAuth();
+  const onSubmitHandler = async (event) => {
+    event.preventDefault();
+    try {
+      setLoading(true);
+      const prompt = `Generate an image of ${input} in the style ${selectedStyle}`;
+      const { data } = await axios.post(
+        "/api/ai/generate-image",
+        {
+          prompt,
+          publish,
+        },
+        {
+          headers: { Authorization: `Bearer ${await getToken()}` },
+        }
+      );
+
+      if (data.success) {
+        setContent(data.content);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+    setLoading(false);
+  };
   return (
-     <div className="h-full overflow-y-scroll p-6 flex items-start flex-wrap gap-4 text-slate-700">
+    <div className="h-full overflow-y-scroll p-6 flex items-start flex-wrap gap-4 text-slate-700">
       {/* left col */}
       <form
         onSubmit={onSubmitHandler}
@@ -23,7 +64,7 @@ const GenerateImages = () => {
           <Sparkles className="w-6 text-[#00AD25]" />
           <h1 className="text-xl font-semibold">AI Image Generator</h1>
         </div>
-        <p className="mt-6 text-sm font-medium">Describe  Your Image</p>
+        <p className="mt-6 text-sm font-medium">Describe Your Image</p>
         <textarea
           onChange={(event) => setInput(event.target.value)}
           value={input}
@@ -48,19 +89,29 @@ const GenerateImages = () => {
             </span>
           ))}
         </div>
-        <div className='my-6 flex items-center gap-2'>
-          <label className='relative cursor-pointer'>
-            <input type="checkbox" onChange={(e)=> setPublish(e.target.checked)}
-            checked={publish} className='sr-only peer' />
-            <div className='w-9 h-5 bg-slate-300 rounded-full peer-checked:bg-green-500 transition'></div>
-            <span className='absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition peer-checked:translate-x-4'></span>
+        <div className="my-6 flex items-center gap-2">
+          <label className="relative cursor-pointer">
+            <input
+              type="checkbox"
+              onChange={(e) => setPublish(e.target.checked)}
+              checked={publish}
+              className="sr-only peer"
+            />
+            <div className="w-9 h-5 bg-slate-300 rounded-full peer-checked:bg-green-500 transition"></div>
+            <span className="absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition peer-checked:translate-x-4"></span>
           </label>
-          <p className='text-sm'>Make this image public</p>
-
+          <p className="text-sm">Make this image public</p>
         </div>
-        
-        <button className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#00Ad25] to-[#04FF50] text-white px-4 py-2 mt-6 text-sm rounded-lg cursor-pointer ">
-          <Image className="w-5" />
+
+        <button
+          disabled={loading}
+          className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#00Ad25] to-[#04FF50] text-white px-4 py-2 mt-6 text-sm rounded-lg cursor-pointer "
+        >
+          {loading ? (
+            <span className="w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin"></span>
+          ) : (
+            <Image className="w-5" />
+          )}
           Generate Image
         </button>
       </form>
@@ -70,17 +121,23 @@ const GenerateImages = () => {
           <Image className="w-5 h-5 text-[#00Ad25]" />
           <h1 className="text-xl font-semibold">Generated Image</h1>
         </div>
-        <div className="flex-1 flex justify-center items-center">
-          <div className="text-sm flex flex-col items-center gap-5 text-gray-400">
-            <Image className="w-9 h-9 " />
-            <p className="font-semibold">
-              Enter a topic and click "Generate Image" to get started
-            </p>
+        {!content ? (
+          <div className="flex-1 flex justify-center items-center">
+            <div className="text-sm flex flex-col items-center gap-5 text-gray-400">
+              <Image className="w-9 h-9 " />
+              <p className="font-semibold">
+                Enter a topic and click "Generate Image" to get started
+              </p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="mt-3 h-full ">
+            <img src={content} alt="image" className="w-full h-full" />
+          </div>
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default GenerateImages
+export default GenerateImages;

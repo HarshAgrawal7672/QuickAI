@@ -8,14 +8,14 @@ export const getUserCreation = async (req,res)=>{
         const {userId}=req.auth();
          const creations=await sql`SELECT * FROM creations WHERE user_id = ${userId} ORDER BY created_at DESC`;
         res.json({
-            sucsess:true,
+            success:true,
             creations
         })
         
     } catch (error) {
         console.log(error);
         res.json({
-            sucsess:false,
+            success:false,
             message:error.message
         })
         
@@ -28,14 +28,14 @@ export const getPublishedCreations = async (req,res)=>{
 
          const creations=await sql`SELECT * FROM creations WHERE publish = true ORDER BY created_at DESC`;
         res.json({
-            sucsess:true,
+            success:true,
             creations
         })
         
     } catch (error) {
         console.log(error);
         res.json({
-            sucsess:false,
+            success:false,
             message:error.message
         })
         
@@ -52,12 +52,12 @@ export const toggleLikeCreations = async (req,res)=>{
 
         if(!creation){
             return res.json({
-                sucsess:false,
+                success:false,
                 message:"Creation not found"
                 })
         }
         const currentLikes=creation.likes;
-        const userIDStr=userId.tostring()
+        const userIDStr= userId.toString()
         let updatedLikes;
         let message;
 
@@ -73,14 +73,14 @@ export const toggleLikeCreations = async (req,res)=>{
         await sql`UPDATE creations SET likes=${formattedArray}::text[] WHERE id=${id}`
         
         res.json({
-            sucsess:true,
+            success:true,
             message
         })
         
     } catch (error) {
         console.log(error);
         res.json({
-            sucsess:false,
+            success:false,
             message:error.message
         })
         

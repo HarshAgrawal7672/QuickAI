@@ -35,7 +35,7 @@ export const generateArticle = async (req, res) => {
         },
       ],
       temperature: 0.7,
-      max_tokens: length || 500,
+      max_tokens: length || 1000,
     });
 
     const content = response.choices[0].message.content;
@@ -85,7 +85,7 @@ export const generateBlogTitle = async (req, res) => {
         },
       ],
       temperature: 0.7,
-      max_tokens: 100,
+      max_tokens: 200,
     });
 
     const content = response.choices[0].message.content;
@@ -156,7 +156,7 @@ export const generateImage = async (req, res) => {
 export const removeImageBackground = async (req, res) => {
   try {
     const { userId } = req.auth();
-    const { image } = req.file;
+    const image  = req.file;
     const plan = req.plan;
 
     if (plan !== "premium") {
@@ -176,7 +176,7 @@ export const removeImageBackground = async (req, res) => {
         }]
     })
 
-    await sql`INSERT INTO creations (user_id, prompt, content, type) VALUES (${userId}, "Remove Background from image ", ${secure_url}, 'image' )`;
+    await sql`INSERT INTO creations (user_id, prompt, content, type) VALUES (${userId}, 'Remove Background from image', ${secure_url}, 'image' )`;
    
     res.json({
       success: true,
@@ -197,7 +197,7 @@ export const removeImageObject = async (req, res) => {
   try {
     const { userId } = req.auth();
     const { object } = req.body;
-    const { image } = req.file;
+    const  image  = req.file;
     const plan = req.plan;
 
     if (plan !== "premium") {
@@ -273,14 +273,14 @@ export const resumeReview = async (req, res) => {
         },
       ],
       temperature: 0.7,
-      max_tokens: 1000,
+      max_tokens: 1500,
     });
 
     const content = response.choices[0].message.content;
 
 
 
-    await sql`INSERT INTO creations (user_id, prompt, content, type) VALUES (${userId}, "Review the uploaded Resume", ${content}, 'resume-review' )`;
+    await sql`INSERT INTO creations (user_id, prompt, content, type) VALUES (${userId}, 'Review the uploaded Resume', ${content}, 'resume-review' )`;
     
     res.json({
       success: true,

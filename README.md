@@ -110,7 +110,7 @@ Add any other frontend-specific variables
 
 The project is organized into a monorepo structure with two main directories:
 
-/
+```
 ├── client/         # React Frontend
 │   ├── src/
 │   └── ...
@@ -120,7 +120,7 @@ The project is organized into a monorepo structure with two main directories:
 │   └── index.js
 └── README.md
 
----
+```
 
 ## License
 
@@ -130,7 +130,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## 👤 Author
 
-**[Your Name]**
+**[Harsh Agrawal]**
 
-* GitHub: [@your-username](https://github.com/HarshAgrawal7672)
-* LinkedIn: [linkedin.com/in/your-profile](https://linkedin.com/in/HarshAgrawal7672)
+* GitHub: [HarshAgrawal7672](https://github.com/HarshAgrawal7672)
+* LinkedIn: [HarshAgrawal](https://linkedin.com/in/HarshAgrawal7672)

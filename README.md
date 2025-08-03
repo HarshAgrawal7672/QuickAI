@@ -119,7 +119,7 @@ Quick.ai is a full-stack AI Software as a Service (SaaS) application built with 
 Quick.ai offers a range of features designed to boost creativity and productivity:
 
 * **User Authentication**: Secure sign-up, sign-in, and profile management powered by **Clerk**.
-* **Subscription Billing**: Premium subscriptions managed through **Clerk's billing features** to unlock access to advanced AI capabilities.
+* **Subscription Billing**: Premium subscriptions managed through **Clerks billing features** to unlock access to advanced AI capabilities.
 * **Article Generator**: Generate high-quality articles by simply providing a title and desired length.
 * **Blog Title Generator**: Get catchy and SEO-friendly blog titles from a keyword and category.
 * **Image Generator**: Create stunning visuals from a text prompt using generative AI.
